@@ -1,0 +1,67 @@
+<main class="shell">
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Task Tracker</p>
+      <h1>Today&rsquo;s tasks</h1>
+    </div>
+
+    <p class="counter">
+      {{ pendingCount }} pending, {{ doneCount }} done
+    </p>
+  </header>
+
+  <section class="panel">
+    <app-task-form (taskCreated)="loadTasks()"></app-task-form>
+  </section>
+
+  <section class="toolbar" aria-label="Task filters">
+    <label>
+      <span>Status</span>
+      <select [(ngModel)]="statusFilter" (ngModelChange)="loadTasks()">
+        <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+      </select>
+    </label>
+
+    <label>
+      <span>Priority</span>
+      <select [(ngModel)]="priorityFilter" (ngModelChange)="loadTasks()">
+        <option *ngFor="let priority of priorities" [value]="priority">
+          {{ priority || 'All' }}
+        </option>
+      </select>
+    </label>
+  </section>
+
+  <p class="state" *ngIf="loading">Loading tasks...</p>
+
+  <p class="state error" *ngIf="error">{{ error }}</p>
+
+  <p class="state" *ngIf="!loading && !error && tasks.length === 0">No tasks found.</p>
+
+  <ul class="task-list" *ngIf="!loading && !error && tasks.length > 0">
+    <li class="task-card" [class.done]="task.is_done" *ngFor="let task of tasks">
+      <div class="task-main">
+        <button class="status-button" type="button" (click)="toggleDone(task)">
+          {{ task.is_done ? 'Done' : 'Pending' }}
+        </button>
+
+        <div>
+          <h2>{{ task.title }}</h2>
+          <p *ngIf="task.description">{{ task.description }}</p>
+        </div>
+      </div>
+
+      <div class="meta">
+        <span class="priority" [class.high]="task.priority === 'High'" [class.medium]="task.priority === 'Medium'" [class.low]="task.priority === 'Low'">
+          {{ task.priority }}
+        </span>
+        <span *ngIf="task.due_date">Due {{ task.due_date | date:'mediumDate' }}</span>
+        <span *ngIf="!task.due_date">No due date</span>
+      </div>
+
+      <button class="delete-button" type="button" (click)="deleteTask(task.id!)">
+        Delete
+      </button>
+    </li>
+  </ul>
+</main>

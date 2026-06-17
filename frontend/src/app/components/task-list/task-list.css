@@ -1,0 +1,208 @@
+.shell {
+  width: min(980px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0;
+}
+
+.topbar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: #607267;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  color: #18251e;
+  font-size: 36px;
+  line-height: 1.1;
+}
+
+.counter {
+  margin: 0;
+  border: 1px solid #cbd7cf;
+  border-radius: 6px;
+  background: #ffffff;
+  padding: 10px 14px;
+  color: #2f6f4e;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.panel {
+  border: 1px solid #d7e0da;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 20px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: end;
+  margin: 20px 0;
+}
+
+.toolbar label {
+  display: grid;
+  gap: 6px;
+  min-width: 160px;
+  color: #4d5b52;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.toolbar select {
+  border: 1px solid #cbd7cf;
+  border-radius: 6px;
+  background: #ffffff;
+  padding: 10px 12px;
+}
+
+.state {
+  margin: 20px 0;
+  color: #607267;
+}
+
+.error {
+  color: #a43434;
+}
+
+.task-list {
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.task-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 16px;
+  align-items: center;
+  border: 1px solid #d7e0da;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 16px;
+}
+
+.task-card.done h2,
+.task-card.done .task-main p {
+  color: #7b887f;
+  text-decoration: line-through;
+}
+
+.task-main {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+h2 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.task-main p {
+  margin: 6px 0 0;
+  color: #607267;
+  line-height: 1.45;
+}
+
+.status-button,
+.delete-button {
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-weight: 800;
+}
+
+.status-button {
+  min-width: 82px;
+  border: 1px solid #9fc5ac;
+  background: #eaf5ee;
+  color: #2f6f4e;
+}
+
+.delete-button {
+  border: 1px solid #e2b2a8;
+  background: #fff1ee;
+  color: #9a3a2b;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: #607267;
+  font-size: 14px;
+}
+
+.meta span {
+  border: 1px solid #d7e0da;
+  border-radius: 999px;
+  background: #f8faf7;
+  padding: 5px 9px;
+}
+
+.priority.high {
+  border-color: #e2b2a8;
+  color: #9a3a2b;
+}
+
+.priority.medium {
+  border-color: #d9cc8e;
+  color: #766100;
+}
+
+.priority.low {
+  border-color: #9fc5ac;
+  color: #2f6f4e;
+}
+
+@media (max-width: 760px) {
+  .shell {
+    width: min(100% - 24px, 980px);
+    padding: 20px 0;
+  }
+
+  .topbar,
+  .task-card {
+    align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .topbar {
+    display: grid;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  .counter {
+    white-space: normal;
+  }
+
+  .task-main {
+    grid-template-columns: 1fr;
+  }
+
+  .status-button,
+  .delete-button {
+    width: 100%;
+  }
+}

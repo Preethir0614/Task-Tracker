@@ -1,0 +1,62 @@
+.task-form {
+  display: grid;
+  gap: 16px;
+}
+
+.form-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 2fr) minmax(160px, 1fr) minmax(140px, 1fr);
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  color: #4d5b52;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid #cbd7cf;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #1f2a24;
+  padding: 10px 12px;
+  font-weight: 400;
+}
+
+textarea {
+  resize: vertical;
+}
+
+button {
+  justify-self: start;
+  border: 0;
+  border-radius: 6px;
+  background: #2f6f4e;
+  color: #ffffff;
+  padding: 10px 16px;
+  font-weight: 700;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.field-error,
+.form-error {
+  margin: 0;
+  color: #a43434;
+  font-size: 14px;
+}
+
+@media (max-width: 760px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
