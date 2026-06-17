@@ -3,6 +3,8 @@ const cors = require('cors');
 const pool = require('./db');
 
 const app = express();
+const allowedPriorities = ['Low', 'Medium', 'High'];
+const allowedStatuses = ['All', 'Pending', 'Done'];
 
 app.use(cors());
 app.use(express.json());
@@ -15,6 +17,14 @@ app.get('/', (req, res) => {
 app.get('/api/tasks', async (req, res) => {
   try {
     const { status, priority } = req.query;
+
+    if (status && !allowedStatuses.includes(status)) {
+      return res.status(400).json({ message: 'Status must be All, Pending, or Done' });
+    }
+
+    if (priority && !allowedPriorities.includes(priority)) {
+      return res.status(400).json({ message: 'Priority must be Low, Medium, or High' });
+    }
 
     let query = 'SELECT * FROM tasks WHERE 1=1';
     let values = [];
@@ -51,9 +61,14 @@ app.get('/api/tasks/:id', async (req, res) => {
       [req.params.id]
     );
 
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
+    res.status(500).json({ message: 'Could not fetch task' });
   }
 });
 
@@ -64,8 +79,16 @@ app.post('/api/tasks', async (req, res) => {
       title,
       description,
       due_date,
-      priority
+      priority = 'Medium'
     } = req.body;
+
+    if (!title || !title.trim()) {
+      return res.status(400).json({ message: 'Title is required' });
+    }
+
+    if (!allowedPriorities.includes(priority)) {
+      return res.status(400).json({ message: 'Priority must be Low, Medium, or High' });
+    }
 
     const result = await pool.query(
       `
@@ -75,9 +98,9 @@ app.post('/api/tasks', async (req, res) => {
       RETURNING *
       `,
       [
-        title,
-        description,
-        due_date,
+        title.trim(),
+        description || null,
+        due_date || null,
         priority
       ]
     );
@@ -85,6 +108,7 @@ app.post('/api/tasks', async (req, res) => {
     res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error(err);
+    res.status(500).json({ message: 'Could not create task' });
   }
 });
 
@@ -99,6 +123,14 @@ app.put('/api/tasks/:id', async (req, res) => {
       is_done
     } = req.body;
 
+    if (!title || !title.trim()) {
+      return res.status(400).json({ message: 'Title is required' });
+    }
+
+    if (!allowedPriorities.includes(priority)) {
+      return res.status(400).json({ message: 'Priority must be Low, Medium, or High' });
+    }
+
     const result = await pool.query(
       `
       UPDATE tasks
@@ -112,34 +144,44 @@ app.put('/api/tasks/:id', async (req, res) => {
       RETURNING *
       `,
       [
-        title,
-        description,
-        due_date,
+        title.trim(),
+        description || null,
+        due_date || null,
         priority,
-        is_done,
+        Boolean(is_done),
         req.params.id
       ]
     );
 
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
+    res.status(500).json({ message: 'Could not update task' });
   }
 });
 
 // DELETE TASK
 app.delete('/api/tasks/:id', async (req, res) => {
   try {
-    await pool.query(
+    const result = await pool.query(
       'DELETE FROM tasks WHERE id=$1',
       [req.params.id]
     );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
 
     res.json({
       message: 'Task Deleted'
     });
   } catch (err) {
     console.error(err);
+    res.status(500).json({ message: 'Could not delete task' });
   }
 });
 
