@@ -36,7 +36,6 @@ TaskTracker/
 │   ├── server.js
 │   ├── package.json
 │   └── .env
-
 ├── frontend/
 │   ├── src/
 │   │   └── app/
