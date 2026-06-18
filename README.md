@@ -212,7 +212,7 @@ API testing with Postman:
 
 | All Tasks | Single Task | Filtered Tasks |
 | --------- | ----------- | -------------- |
-| ![Postman GET all tasks](<docs/screenshots/postman-GET- All_tasks.png>) | ![Postman GET single task](docs/screenshots/postman-GET-Single_task.png) | ![Postman GET filtered task](docs/screenshots/postman-GET-filter_task.png) |
+| ![Postman GET all tasks](<docs/screenshots/postman-GET-All_tasks.png>) | ![Postman GET single task](docs/screenshots/postman-GET-Single_task.png) | ![Postman GET filtered task](docs/screenshots/postman-GET-filter_task.png) |
 
 | Create Task | Update Task | Delete Task |
 | ----------- | ----------- | ----------- |
