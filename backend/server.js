@@ -79,11 +79,19 @@ app.post('/api/tasks', async (req, res) => {
       title,
       description,
       due_date,
-      priority = 'Medium'
+      priority
     } = req.body;
 
     if (!title || !title.trim()) {
       return res.status(400).json({ message: 'Title is required' });
+    }
+
+    if (!description || !description.trim()) {
+      return res.status(400).json({ message: 'Description is required' });
+    }
+
+    if (!due_date) {
+      return res.status(400).json({ message: 'Due date is required' });
     }
 
     if (!allowedPriorities.includes(priority)) {
@@ -99,8 +107,8 @@ app.post('/api/tasks', async (req, res) => {
       `,
       [
         title.trim(),
-        description || null,
-        due_date || null,
+        description.trim(),
+        due_date,
         priority
       ]
     );
@@ -127,6 +135,14 @@ app.put('/api/tasks/:id', async (req, res) => {
       return res.status(400).json({ message: 'Title is required' });
     }
 
+    if (!description || !description.trim()) {
+      return res.status(400).json({ message: 'Description is required' });
+    }
+
+    if (!due_date) {
+      return res.status(400).json({ message: 'Due date is required' });
+    }
+
     if (!allowedPriorities.includes(priority)) {
       return res.status(400).json({ message: 'Priority must be Low, Medium, or High' });
     }
@@ -145,8 +161,8 @@ app.put('/api/tasks/:id', async (req, res) => {
       `,
       [
         title.trim(),
-        description || null,
-        due_date || null,
+        description.trim(),
+        due_date,
         priority,
         Boolean(is_done),
         req.params.id

@@ -1,18 +1,25 @@
 <form class="task-form" [formGroup]="taskForm" (ngSubmit)="submit()">
-  <div class="form-grid">
-    <label>
+  <div class="field-stack">
+    <label class="field title-field">
       <span>Title</span>
-      <input type="text" formControlName="title" maxlength="200" placeholder="Add a task">
+      <input type="text" formControlName="title" maxlength="200" placeholder="Add a task" required>
     </label>
 
-    <label>
+    <label class="field">
+      <span>Description</span>
+      <textarea formControlName="description" rows="4" placeholder="Add task details" required></textarea>
+    </label>
+  </div>
+
+  <div class="form-grid">
+    <label class="field">
       <span>Due date</span>
-      <input type="date" formControlName="due_date">
+      <input type="date" formControlName="due_date" required>
     </label>
 
-    <label>
+    <label class="field">
       <span>Priority</span>
-      <select formControlName="priority">
+      <select formControlName="priority" required>
         <option value="Low">Low</option>
         <option value="Medium">Medium</option>
         <option value="High">High</option>
@@ -20,18 +27,27 @@
     </label>
   </div>
 
-  <label>
-    <span>Description</span>
-    <textarea formControlName="description" rows="3" placeholder="Optional details"></textarea>
-  </label>
-
   <p class="field-error" *ngIf="taskForm.controls.title.touched && taskForm.controls.title.invalid">
     Title is required.
   </p>
+  <p class="field-error" *ngIf="taskForm.controls.description.touched && taskForm.controls.description.invalid">
+    Description is required.
+  </p>
+  <p class="field-error" *ngIf="taskForm.controls.due_date.touched && taskForm.controls.due_date.invalid">
+    Due date is required.
+  </p>
+  <p class="field-error" *ngIf="taskForm.controls.priority.touched && taskForm.controls.priority.invalid">
+    Priority is required.
+  </p>
 
-  <p class="form-error" *ngIf="error">{{ error }}</p>
+  <div class="form-footer">
+    <div class="message-area" aria-live="polite">
+      <p class="form-error" *ngIf="error">{{ error }}</p>
+      <p class="success-message" *ngIf="success">{{ success }}</p>
+    </div>
 
-  <button type="submit" [disabled]="saving">
-    {{ saving ? 'Saving...' : 'Add Task' }}
-  </button>
+    <button type="submit" [disabled]="saving">
+      {{ saving ? 'Saving...' : 'Add Task' }}
+    </button>
+  </div>
 </form>

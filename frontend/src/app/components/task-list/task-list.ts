@@ -18,6 +18,7 @@ export class TaskListComponent implements OnInit {
   tasks: Task[] = [];
   loading = false;
   error = '';
+  searchTerm = '';
   statusFilter: TaskStatusFilter = 'All';
   priorityFilter: TaskPriority | '' = '';
   readonly statuses: TaskStatusFilter[] = ['All', 'Pending', 'Done'];
@@ -37,6 +38,16 @@ export class TaskListComponent implements OnInit {
 
   get doneCount(): number {
     return this.tasks.filter(task => task.is_done).length;
+  }
+
+  get filteredTasks(): Task[] {
+    const search = this.searchTerm.trim().toLowerCase();
+
+    if (!search) {
+      return this.tasks;
+    }
+
+    return this.tasks.filter(task => task.title.toLowerCase().includes(search));
   }
 
   loadTasks() {

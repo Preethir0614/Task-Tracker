@@ -2,18 +2,35 @@
   box-sizing: border-box;
 }
 
+:root {
+  --ink: #17211c;
+  --muted: #607066;
+  --paper: #fffdf7;
+  --panel: #ffffff;
+  --line: #d8e0d5;
+  --green: #2f7653;
+  --green-dark: #1f5e40;
+  --mint: #dff4e6;
+  --amber: #f6d36f;
+  --red: #c7523c;
+  --shadow: 0 18px 50px rgba(25, 44, 34, 0.12);
+}
+
 body {
   margin: 0;
-  background: #f4f7f2;
-  color: #1f2a24;
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(246, 211, 111, 0.34), transparent 30%),
+    linear-gradient(135deg, #f8f5e9 0%, #edf6ef 48%, #f7fbf4 100%);
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
 }
 
 button,
 input,
 select,
 textarea {
-  font: inherit;
+  font-family: "Trebuchet MS", Verdana, sans-serif;
 }
 
 button {

@@ -1,67 +1,105 @@
 <main class="shell">
-  <header class="topbar">
+  <header class="hero">
     <div>
       <p class="eyebrow">Task Tracker</p>
-      <h1>Today&rsquo;s tasks</h1>
+      <h1>Plan the work. Clear the list.</h1>
+      <p class="hero-copy">Keep deadlines, priorities, and progress in one tidy view.</p>
     </div>
 
-    <p class="counter">
-      {{ pendingCount }} pending, {{ doneCount }} done
-    </p>
+    <div class="counter-card" aria-label="Task summary">
+      <span>{{ pendingCount }}</span>
+      <small>pending</small>
+      <span>{{ doneCount }}</span>
+      <small>done</small>
+    </div>
   </header>
 
-  <section class="panel">
-    <app-task-form (taskCreated)="loadTasks()"></app-task-form>
-  </section>
+  <div class="workspace">
+    <section class="panel form-panel">
+      <div class="section-heading">
+        <p class="eyebrow">New task</p>
+        <h2>Add something to track</h2>
+      </div>
 
-  <section class="toolbar" aria-label="Task filters">
-    <label>
-      <span>Status</span>
-      <select [(ngModel)]="statusFilter" (ngModelChange)="loadTasks()">
-        <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
-      </select>
-    </label>
+      <app-task-form (taskCreated)="loadTasks()"></app-task-form>
+    </section>
 
-    <label>
-      <span>Priority</span>
-      <select [(ngModel)]="priorityFilter" (ngModelChange)="loadTasks()">
-        <option *ngFor="let priority of priorities" [value]="priority">
-          {{ priority || 'All' }}
-        </option>
-      </select>
-    </label>
-  </section>
-
-  <p class="state" *ngIf="loading">Loading tasks...</p>
-
-  <p class="state error" *ngIf="error">{{ error }}</p>
-
-  <p class="state" *ngIf="!loading && !error && tasks.length === 0">No tasks found.</p>
-
-  <ul class="task-list" *ngIf="!loading && !error && tasks.length > 0">
-    <li class="task-card" [class.done]="task.is_done" *ngFor="let task of tasks">
-      <div class="task-main">
-        <button class="status-button" type="button" (click)="toggleDone(task)">
-          {{ task.is_done ? 'Done' : 'Pending' }}
-        </button>
-
-        <div>
-          <h2>{{ task.title }}</h2>
-          <p *ngIf="task.description">{{ task.description }}</p>
+    <section class="list-panel">
+      <div class="list-topline">
+        <div class="section-heading">
+          <p class="eyebrow">Tasks</p>
+          <h2>Your queue</h2>
         </div>
+
+        <section class="toolbar" aria-label="Task filters">
+          <label class="search-field">
+            <span>Search</span>
+            <input
+              type="search"
+              [(ngModel)]="searchTerm"
+              placeholder="Search by title"
+              aria-label="Search tasks by title">
+          </label>
+
+          <label>
+            <span>Status</span>
+            <select [(ngModel)]="statusFilter" (ngModelChange)="loadTasks()">
+              <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Priority</span>
+            <select [(ngModel)]="priorityFilter" (ngModelChange)="loadTasks()">
+              <option *ngFor="let priority of priorities" [value]="priority">
+                {{ priority || 'All' }}
+              </option>
+            </select>
+          </label>
+        </section>
       </div>
 
-      <div class="meta">
-        <span class="priority" [class.high]="task.priority === 'High'" [class.medium]="task.priority === 'Medium'" [class.low]="task.priority === 'Low'">
-          {{ task.priority }}
-        </span>
-        <span *ngIf="task.due_date">Due {{ task.due_date | date:'mediumDate' }}</span>
-        <span *ngIf="!task.due_date">No due date</span>
-      </div>
+      <p class="state" *ngIf="loading">Loading tasks...</p>
 
-      <button class="delete-button" type="button" (click)="deleteTask(task.id!)">
-        Delete
-      </button>
-    </li>
-  </ul>
+      <p class="state error" *ngIf="error">{{ error }}</p>
+
+      <p class="state empty" *ngIf="!loading && !error && filteredTasks.length === 0">No tasks found.</p>
+
+      <ul class="task-list" *ngIf="!loading && !error && filteredTasks.length > 0">
+        <li class="task-card" [class.done]="task.is_done" *ngFor="let task of filteredTasks">
+          <div class="task-main">
+            <button
+              class="toggle-switch"
+              type="button"
+              role="switch"
+              [attr.aria-checked]="task.is_done"
+              [attr.aria-label]="task.is_done ? 'Mark task as pending' : 'Mark task as done'"
+              (click)="toggleDone(task)">
+              <span class="toggle-knob"></span>
+            </button>
+
+            <div class="task-content">
+              <div class="title-row">
+                <h3>{{ task.title }}</h3>
+                <span class="status-pill">{{ task.is_done ? 'Done' : 'Pending' }}</span>
+              </div>
+              <p *ngIf="task.description">{{ task.description }}</p>
+            </div>
+          </div>
+
+          <div class="meta">
+            <span class="priority" [class.high]="task.priority === 'High'" [class.medium]="task.priority === 'Medium'" [class.low]="task.priority === 'Low'">
+              {{ task.priority }}
+            </span>
+            <span *ngIf="task.due_date">Due {{ task.due_date | date:'mediumDate' }}</span>
+            <span *ngIf="!task.due_date">No due date</span>
+          </div>
+
+          <button class="delete-button" type="button" title="Delete task" (click)="deleteTask(task.id!)">
+            Delete
+          </button>
+        </li>
+      </ul>
+    </section>
+  </div>
 </main>
