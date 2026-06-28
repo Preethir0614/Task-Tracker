@@ -16,6 +16,7 @@ import { Task, TaskPriority, TaskStatusFilter } from '../../models/task';
 export class TaskListComponent implements OnInit {
 
   tasks: Task[] = [];
+  allTasks: Task[] = [];
   loading = false;
   error = '';
   searchTerm = '';
@@ -29,15 +30,15 @@ export class TaskListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadTasks();
+    this.refreshTasks();
   }
 
   get pendingCount(): number {
-    return this.tasks.filter(task => !task.is_done).length;
+    return this.allTasks.filter(task => !task.is_done).length;
   }
 
   get doneCount(): number {
-    return this.tasks.filter(task => task.is_done).length;
+    return this.allTasks.filter(task => task.is_done).length;
   }
 
   get filteredTasks(): Task[] {
@@ -70,6 +71,24 @@ export class TaskListComponent implements OnInit {
       });
   }
 
+  loadTaskCounts() {
+    this.taskService
+      .getTasks()
+      .subscribe({
+        next: data => {
+          this.allTasks = data;
+        },
+        error: err => {
+          console.error('Failed to load task counts', err);
+        }
+      });
+  }
+
+  refreshTasks() {
+    this.loadTasks();
+    this.loadTaskCounts();
+  }
+
   toggleDone(task: Task) {
     const updatedTask: Task = {
       ...task,
@@ -80,7 +99,7 @@ export class TaskListComponent implements OnInit {
       .updateTask(task.id!, updatedTask)
       .subscribe({
         next: () => {
-          this.loadTasks();
+          this.refreshTasks();
         },
         error: () => {
           this.error = 'Task status could not be updated.';
@@ -96,7 +115,7 @@ export class TaskListComponent implements OnInit {
         .deleteTask(id)
         .subscribe({
           next: () => {
-            this.loadTasks();
+            this.refreshTasks();
           },
           error: () => {
             this.error = 'Task could not be deleted.';
